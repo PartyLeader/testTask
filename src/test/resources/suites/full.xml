@@ -1,12 +1,8 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="Component Tests">
-    <test name="api" preserve-order="true" >
+    <test name="ui">
         <classes>
-        </classes>
-    </test>
-    <test name="ui" preserve-order="true" >
-        <classes>
-            <class name="sk.ui.BaseTest" />
+            <class name="sk.ui.OrderTest" />
         </classes>
     </test>
 </suite>

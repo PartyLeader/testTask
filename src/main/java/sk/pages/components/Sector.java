@@ -1,7 +1,6 @@
 package sk.pages.components;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import sk.config.WebDriverDecorator;
@@ -33,6 +32,7 @@ public class Sector {
         );
     }
 
+    //find all items and select by index in List<Element>
     public void selectCardByIndex(int index) {
         List<WebElement> cards = driver.findElement(container).findElements(cardItems);
         Assert.assertNotNull(cards, "Cards aren't exist");

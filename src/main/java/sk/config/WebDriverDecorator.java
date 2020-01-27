@@ -3,8 +3,10 @@ package sk.config;
 import org.apache.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.pagefactory.ByChained;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -119,7 +121,7 @@ public class WebDriverDecorator implements WebDriver{
     }
 
     public List<WebElement> findElements(By locator, long timeoutInSeconds) {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(explicitWait));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeoutInSeconds));
 
         log.info("Waiting for presence of all elements: " + locator + " with timeout of: " + timeoutInSeconds);
         try {
@@ -133,6 +135,37 @@ public class WebDriverDecorator implements WebDriver{
         return driver.findElements(locator);
     }
 
+    private WebElement findVisibleElement(By locator) {
+
+        log.info("Waiting for visibility of element: " + locator);
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        } catch (Exception e) {
+            log.error("Element: " + locator + " was not visible after: " + explicitWait + " s");
+            if (failOnException) {
+                throw e;
+            }
+        }
+        return driver.findElement(locator);
+    }
+
+    public void clickOn(By locator) {
+        log.info("Clicking on element: " + locator);
+        try {
+            findVisibleElement(locator).click();
+        } catch (WebDriverException e) {
+            log.error("It was not possible to click on element " + locator);
+            if (failOnException) {
+                throw e;
+            }
+        }
+    }
+
+    public boolean isVisible(By locator) {
+        log.info("Checking if " + locator + " is visible");
+        return findVisibleElement(locator) != null;
+    }
+
     public String getElementText(By locator) {
         log.info("Getting text of element:" + locator);
         return this.findElement(locator).getText();
@@ -141,5 +174,9 @@ public class WebDriverDecorator implements WebDriver{
     public List<String> getElementsText(By locator) {
         log.info("Getting text of all elements: " + locator);
         return this.findElements(locator).stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+
+    public By chained(By by1, By by2) {
+        return new ByChained(by1, by2);
     }
 }
