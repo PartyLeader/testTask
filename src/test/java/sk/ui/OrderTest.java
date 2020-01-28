@@ -17,10 +17,10 @@ public class OrderTest extends BaseTest {
 
     @Test(description = "Verify names of the all section on the main page")
     public void sectionVerification() {
-        List<String> sectorNames = newArrayList("Discover Amazon", "Best Sellers in Sports & Outdoors",
-                "Best Sellers in Kitchen & Dining", "Best Sellers in Clothing, Shoes & Jewelry",
-                "Amazon Top Sellers", "Trending in Video Games", "Best Sellers in Cell Phones & Accessories",
-                "Best Sellers in Beauty & Personal Care");
+        List<String> sectorNames = newArrayList("Discover Amazon2", "Best Sellers in Sports & Outdoors",
+                "Best Sellers in Clothing, Shoes & Jewelry", "Amazon Top Sellers",
+                "Best Sellers in Computers & Accessories", "Best Sellers in Cell Phones & Accessories",
+                "Must have Wireless products", "Best Sellers in Beauty & Personal Care");
         mainPageSteps.checkSectorNames(sectorNames);
     }
 

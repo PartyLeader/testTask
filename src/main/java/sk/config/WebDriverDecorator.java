@@ -1,10 +1,8 @@
 package sk.config;
 
+import io.qameta.allure.Attachment;
 import org.apache.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.pagefactory.ByChained;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -178,5 +176,11 @@ public class WebDriverDecorator implements WebDriver{
 
     public By chained(By by1, By by2) {
         return new ByChained(by1, by2);
+    }
+
+    @Attachment(value = "PageObject screenshot", type = "image/png")
+    public byte[] takeScreenshot() {
+        log.info("Taking screenshot on test failure");
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 }

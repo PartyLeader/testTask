@@ -31,6 +31,6 @@ public class CartPage extends AbstractPage {
 
     public void checkItemsInCart(List<String> itemsList) {
         List<String> itemsInChart = driver.getElementsText(itemTitle);
-        Assert.assertEquals(itemsInChart, itemsList);
+        Assert.assertEquals(itemsInChart, itemsList, "");
     }
 }
