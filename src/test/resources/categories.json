@@ -1,0 +1,7 @@
+[
+  {
+    "matchedStatuses": ["skipped"],
+    "name": "Known issues",
+    "messageRegex": "Skipped test"
+  }
+]

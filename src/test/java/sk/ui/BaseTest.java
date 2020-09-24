@@ -3,30 +3,20 @@ package sk.ui;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import sk.config.WebDriverDecorator;
-import sk.steps.CartPageSteps;
-import sk.steps.DetailPageSteps;
+import sk.config.AbstractTest;
 import sk.steps.MainPageSteps;
 
 import java.util.Objects;
 
+import static sk.constants.UserConstants.SERVICE_USER;
 
-public class BaseTest {
-    private WebDriverDecorator driver = new WebDriverDecorator();
-    DetailPageSteps detailsPageSteps;
-    CartPageSteps cartPageSteps;
+public class BaseTest extends AbstractTest {
 
-    MainPageSteps mainPageSteps;
-
-    protected WebDriverDecorator getDriver() {
-        return this.driver;
-    }
+    protected MainPageSteps mainPageSteps;
 
     @BeforeClass(alwaysRun = true)
     public void initPages() {
         mainPageSteps = new MainPageSteps(getDriver());
-        detailsPageSteps = new DetailPageSteps(getDriver());
-        cartPageSteps = new CartPageSteps(getDriver());
     }
 
     @BeforeMethod(alwaysRun = true)

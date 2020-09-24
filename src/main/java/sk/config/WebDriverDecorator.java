@@ -1,10 +1,8 @@
 package sk.config;
 
+import io.qameta.allure.Attachment;
 import org.apache.log4j.Logger;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.pagefactory.ByChained;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -166,6 +164,12 @@ public class WebDriverDecorator implements WebDriver{
         return findVisibleElement(locator) != null;
     }
 
+    public boolean isPresentNow(By locator) {
+        log.info("Check if " + locator + " is presents now");
+        List<WebElement> elements = this.findElements(locator);
+        return elements.size() != 0;
+    }
+
     public String getElementText(By locator) {
         log.info("Getting text of element:" + locator);
         return this.findElement(locator).getText();
@@ -176,7 +180,57 @@ public class WebDriverDecorator implements WebDriver{
         return this.findElements(locator).stream().map(WebElement::getText).collect(Collectors.toList());
     }
 
+    public void waitForElementDisappear(By locator) {
+        log.info("Wait for element to disappear: " + locator);
+        this.wait.until(ExpectedConditions.invisibilityOfAllElements(this.findElements(locator)));
+    }
+
+    public void waitForElementDisappear(By locator, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(this.driver, Duration.ofSeconds(timeoutInSeconds));
+        log.info("Wait for element to disappear: " + locator);
+        wait.until(ExpectedConditions.invisibilityOfAllElements(this.findElements(locator)));
+    }
+
+    public void cleanAndType(By locator, String text) {
+        log.info("Cleaning: " + locator + "and type text: " + text);
+        WebElement element = this.findVisibleElement(locator);
+        element.clear();
+        element.sendKeys(new CharSequence[] {String.valueOf(text)});
+    }
+
+    public void type(By locator, String text) {
+        log.info("Type into: " + locator + " text: " + text);
+        this.findVisibleElement(locator).sendKeys(new CharSequence[] {String.valueOf(text)});
+    }
+
+    public void executeJavaScript(String javaScript, By locator) {
+        log.info("Execute JavaScript: " + javaScript + " on element: " + locator);
+        ((JavascriptExecutor) driver).executeScript(javaScript, new Object[] {this.findElement(locator)});
+    }
+
+    public void executeJavaScript(String javaScript) {
+        log.info("Execute JavaScript: " + javaScript + " on all page");
+        ((JavascriptExecutor) driver).executeScript(javaScript);
+    }
+
+    public void waitForAngular() {
+        this.waitForAngular("return getAllAngularTestabilities()[0].isStable()");
+    }
+
+    public void waitForAngular(String javaScript) {
+        log.info("Wait for Angular: " + javaScript + " on all page");
+        this.wait.until(driver -> {
+            return ((JavascriptExecutor) driver).executeScript(javaScript, new Object[0]).equals(true);
+        });
+    }
+
     public By chained(By by1, By by2) {
         return new ByChained(by1, by2);
+    }
+
+    @Attachment(value = "PageObject screenshot", type = "image/png")
+    public byte[] takeScreenshot() {
+        log.info("Taking screenshot on test failure");
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 }
