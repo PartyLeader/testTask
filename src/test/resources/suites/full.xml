@@ -1,8 +1,9 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
-<suite name="Component Tests">
+<suite name="Blog Tests" parallel="none">
     <test name="ui">
         <classes>
-            <class name="sk.ui.OrderTest" />
+            <class name="sk.ui.guest.ArticleCreationTest" />
+            <class name="sk.ui.writer.ArticleCreationTest" />
         </classes>
     </test>
 </suite>
